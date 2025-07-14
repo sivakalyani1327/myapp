@@ -2,24 +2,29 @@ name: Maven CI
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
+    - name: Remove Elm cache
+      run: |
+        echo "🧹 Removing corrupted Elm cache..."
+        rm -rf ~/.elm
+        rm -rf elm-stuff
 
-      - name: Build backend only (skip frontend)
-        run: mvn clean install -pl myapp-backend -am
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Build with Maven
+      run: mvn clean install
 
 

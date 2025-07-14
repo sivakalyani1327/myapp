@@ -1,13 +1,16 @@
 name: Maven CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source code
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up JDK 17
@@ -16,7 +19,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Skip frontend and build only backend
-        run: mvn -pl '!myapp-frontend' clean package
+      - name: Build backend only (skip frontend)
+        run: mvn clean install -pl myapp-backend -am
 
 
